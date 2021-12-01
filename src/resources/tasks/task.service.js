@@ -1,9 +1,15 @@
-const usersController = require('./task.memory.repository');
+const taskController = require('./task.memory.repository');
+const { updateBoard, getBoardById } = require('../boards/board.service');
 
-const getAll = (board) => usersController.getAll(board);
-const getTaskById = (board,id) => usersController.getTask(board,id);
-const createTask = (board, data) => usersController.createTask(board, data);
-const updateTask = (board,id,data) => usersController.updateTask(board,id,data);
-const deleteTask = (board,id) => usersController.deleteTask(board,id);
-
-module.exports = { getAll,getTaskById,createTask,updateTask,deleteTask };
+const getAll = (boardId) => taskController.getAll(getBoardById(boardId));
+const getTaskById = (boardId, id) => taskController.getTask(getBoardById(boardId), id);
+const createTask = (boardId, data) => {
+  updateBoard(boardId, taskController.createTask(getBoardById(boardId), data));
+};
+const updateTask = (boardId, id, data) => {
+  updateBoard(boardId, taskController.updateTask(getBoardById(boardId), id, data));
+};
+const deleteTask = (boardId, id) => {
+  updateBoard(boardId, taskController.deleteTask(getBoardById(boardId), id));
+};
+module.exports = { getAll, getTaskById, createTask, updateTask, deleteTask };

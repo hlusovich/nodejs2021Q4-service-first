@@ -10,35 +10,32 @@ class TasksController {
   }
 
   static createTask(board, payload) {
-    const editBoard = board.columns.map(item => {
+    const editBoardColumns = board.columns.map(item => {
         if (item.id === payload.columnId) {
           item.tasks.push(new Task(payload));
         }
         return item;
       }
     );
-    return editBoard;
+    return {...board, columns:editBoardColumns};
   }
 
   static updateTask(board, id, payload) {
-    const editBoard = board.columns.map(item => {
+    const editBoardColumns = board.columns.map(item => {
         if (item.id === payload.columnId) {
           const updatedTasks = item.tasks.map(task => task.id === id ? new Task({ ...task, ...payload }) : task);
-          return updatedTasks;
+          return {...item, tasks:updatedTasks};
         }
         return item;
       }
     );
-    return editBoard;
+    return {...board, columns:editBoardColumns};
   }
 
-  static deleteTask(board, id) {
-    const editBoard = board.columns.map(item => {
-        const filteredTasks = [...item.tasks.filter(task => task.id !== id)];
-        return filteredTasks;
-      }
+  static deleteTask(board, id) {console.log(id)
+    const editBoardColumns = board.columns.map(item => ({...item, tasks: item.tasks.filter(task => task.id !== id)})
     );
-    return editBoard;
+    return {...board, columns:editBoardColumns};
   }
 }
 
