@@ -1,5 +1,5 @@
 const server = require('../../app');
-const { getAll,getBoardById,createBoard,updateBoard,deleteBoard } = require('./user.service');
+const { getAll,getBoardById,createBoard,updateBoard,deleteBoard } = require('./board.service');
 const createRoute = require('../../../utils/routeCreater');
 
 const routes = [createRoute('GET', '/boards', () => getAll()),

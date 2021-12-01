@@ -1,5 +1,6 @@
 const Board = require('./board.model');
 
+
 class BoardsController {
   constructor(boards = []) {
     this.boards = boards;
@@ -36,5 +37,21 @@ class BoardsController {
     return `Bard with ${id} was successfully  deleted`;
   }
 }
+const moc = new Board(
+  {
+    title:"First",
+    id:"42",
+    columns:[
+      {id:"1", title:"first", order:1, tasks:[
+          {id:"22", name:"22"}
 
-module.exports = new BoardsController();
+        ]},{
+        id:"2", title:"second", order:2, tasks:[
+          {id:"32", name:"32"}, {id:"42", name:"mikita"}
+
+        ]
+      }
+    ]
+  }
+)
+  module.exports = new BoardsController([moc]);
