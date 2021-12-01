@@ -1,7 +1,7 @@
 const User = require('./user.model');
 
 class UserController {
-  constructor(users = [{ id: '2', name: 'mikita', login: 228, password: 229 }]) {
+  constructor(users = []) {
     this.users = users;
   }
 
@@ -23,12 +23,11 @@ class UserController {
     let  user = null;
     this.users = this.users.map(item => {
       if (item.id === id) {
-        user = { ...item, ...payload };
+        user = new User({ ...item, ...payload });
         return user;
       }
       return item;
     });
-    console.log(this.users)
     return User.toResponse(user);
   }
 
