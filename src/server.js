@@ -1,6 +1,10 @@
+const server = require('./app');
 const { PORT } = require('./common/config');
-const app = require('./app');
+require('./resources/users/user.router');
 
-app.listen(PORT, () =>
-  console.log(`App is running on http://localhost:${PORT}`)
-);
+async function  startServer() {
+  await server.start();
+  console.log(`Server successfully started on port ${PORT}`)
+
+}
+startServer();
