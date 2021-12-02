@@ -1,10 +1,20 @@
 const setStatusCode = require('./setStatusCode');
+const errorHandler = require('../handler/errorHandler');
 const createRoute = (method, path, handler) => {
   return {
     method,
     path,
-    handler: function(req, h) { // request handler method
-      return h.response(handler(req, h)).code(setStatusCode(method)); // reply with text.
+    handler: function(req, h) { //
+      try{
+        const response = h.response(handler(req, h));
+        return response.code(setStatusCode(method)); // reply with text.
+      }
+      catch(e){
+        console.log("!!!!!!!!!!!!!")
+        const moc = (req,h)=>{return "Not Found"};
+       return  errorHandler(e,h.response(moc(req,h)));
+      }
+
     }
   };
 };

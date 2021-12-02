@@ -1,7 +1,8 @@
 const Board = require('./board.model');
-
+const Error404 = require('../../../Errors/404error');
 
 class BoardsController {
+
   constructor(boards = []) {
     this.boards = boards;
   }
@@ -11,7 +12,11 @@ class BoardsController {
   }
 
   getBoard(id) {
-    return this.boards.find(item => item.id === id).toResponse();
+    const board = this.boards.find(item => item.id === id);
+    if (board) {
+      return board.toResponse();
+    }
+    throw  Error404;
   }
 
   createBoard(payload) {
@@ -41,14 +46,14 @@ class BoardsController {
     let columns = null;
     this.boards = this.boards.map(board => {
       columns = board.toResponse().columns.map(column => ({
-          ...column, tasks: column.tasks.map(task => {
-            if (task.userId === id) {
-              return { ...task, userId: null };
-            }
-            return task;
-          })
-        }));
-      const result = { ...board};
+        ...column, tasks: column.tasks.map(task => {
+          if (task.userId === id) {
+            return { ...task, userId: null };
+          }
+          return task;
+        })
+      }));
+      const result = { ...board };
       result.columns = columns;
       return new Board(result);
     });
@@ -56,42 +61,4 @@ class BoardsController {
 
 }
 
-const moc = new Board(
-  {
-    title: 'First',
-    id: '42',
-    columns: [
-      {
-        id: '1', title: 'first', order: 1, tasks: [
-          { id: '22', name: '22', userId: "11" }
-
-        ]
-      }, {
-        id: '2', title: 'second', order: 2, tasks: [
-          { id: '32', name: '32', userId: "11" }, { id: '42', name: 'mikita', userId: "13" }
-
-        ]
-      }
-    ]
-  }
-);
-const moc2 = new Board(
-  {
-    title: 'First',
-    id: '43',
-    columns: [
-      {
-        id: '1', title: 'first', order: 1, tasks: [
-          { id: '22', name: '22', userId: '11' }
-
-        ]
-      }, {
-        id: '2', title: 'second', order: 2, tasks: [
-          { id: '32', name: '32', userId: '11' }, { id: '42', name: 'mikita', userId: '13' }
-
-        ]
-      }
-    ]
-  }
-);
-module.exports = new BoardsController([moc, moc2]);
+module.exports = new BoardsController([]);

@@ -1,5 +1,7 @@
 const Task = require('./task.model');
 
+const tasks = [];
+
 class TasksController {
   static getAll(board) {
     return board.columns.map(item => item.tasks).flat();
@@ -12,7 +14,13 @@ class TasksController {
   static createTask(board, payload) {
     const editBoardColumns = board.columns.map(item => {
         if (item.id === payload.columnId) {
-          item.tasks.push(new Task(payload));
+          if(item.tasks){
+            item.tasks.push(new Task(payload));
+          }
+          else{
+            tasks.push(new Task(payload))
+          }
+
         }
         return item;
       }

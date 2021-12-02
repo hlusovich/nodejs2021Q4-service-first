@@ -16,7 +16,7 @@ class UserController {
   createUser(payload) {
     const user = new User(payload);
     this.users.push(user);
-    return user;
+    return User.toResponse(user);
   }
 
   updateUser(id, payload) {
