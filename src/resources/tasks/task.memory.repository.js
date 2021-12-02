@@ -1,50 +1,53 @@
 const Task = require('./task.model');
 
-const tasks = [];
 
 class TasksController {
-  static getAll(board) {
-    return board.columns.map(item => item.tasks).flat();
+  constructor() {
+    this.tasks = [];
   }
 
-  static getTask(board, id) {
-    return TasksController.getAll(board).find(item => item.id === id);
+  getAll() {
+    return this.tasks;
   }
 
-  static createTask(board, payload) {
-    const editBoardColumns = board.columns.map(item => {
-        if (item.id === payload.columnId) {
-          if(item.tasks){
-            item.tasks.push(new Task(payload));
-          }
-          else{
-            tasks.push(new Task(payload))
-          }
+  getTask(id) {
+    return this.tasks.find(item => item.id === id);
+  }
 
-        }
-        return item;
+  createTask(payload) {
+    const newTask = new Task(payload);
+    this.tasks.push(newTask);
+    return newTask;
+  }
+
+  updateTask(id, payload) {
+    let newTask = null;
+    this.tasks = this.tasks.map(item => {
+      if (item.id === id) {
+        newTask = new Task({ ...item, ...payload });
+        return newTask;
       }
-    );
-    return {...board, columns:editBoardColumns};
+      return item;
+    });
+    return newTask;
   }
 
-  static updateTask(board, id, payload) {
-    const editBoardColumns = board.columns.map(item => {
-        if (item.id === payload.columnId) {
-          const updatedTasks = item.tasks.map(task => task.id === id ? new Task({ ...task, ...payload }) : task);
-          return {...item, tasks:updatedTasks};
-        }
-        return item;
+  deleteTask(id) {
+    this.tasks = this.tasks.filter(item => item.id !== id);
+  }
+
+  unsubscribeUser(id) {
+    this.tasks = this.tasks.filter(item => {
+      if (item.userId === id) {
+        return { item, userId: null };
       }
-    );
-    return {...board, columns:editBoardColumns};
+      return item;
+    });
   }
 
-  static deleteTask(board, id) {console.log(id)
-    const editBoardColumns = board.columns.map(item => ({...item, tasks: item.tasks.filter(task => task.id !== id)})
-    );
-    return {...board, columns:editBoardColumns};
+  unsubscribeBoard(id) {
+    this.tasks = this.tasks.filter(item => item.boardId !== id);
   }
 }
 
-module.exports = TasksController;
+module.exports = new TasksController();
