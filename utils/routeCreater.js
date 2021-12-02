@@ -10,7 +10,6 @@ const createRoute = (method, path, handler) => {
         return response.code(setStatusCode(method)); // reply with text.
       }
       catch(e){
-        console.log("!!!!!!!!!!!!!")
         const moc = (req,h)=>{return "Not Found"};
        return  errorHandler(e,h.response(moc(req,h)));
       }

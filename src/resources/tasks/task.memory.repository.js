@@ -1,4 +1,5 @@
 const Task = require('./task.model');
+const Error404 = require('../../../Errors/404error');
 
 
 class TasksController {
@@ -11,11 +12,16 @@ class TasksController {
   }
 
   getTask(id) {
-    return this.tasks.find(item => item.id === id);
+    const task = this.tasks.find(item => item.id === id);
+    if (task) {
+      return task;
+    }
+    throw Error404('Not found');
+
   }
 
-  createTask(payload) {
-    const newTask = new Task(payload);
+  createTask(payload,boardId) {
+    const newTask = new Task({...payload, boardId});
     this.tasks.push(newTask);
     return newTask;
   }
@@ -33,13 +39,18 @@ class TasksController {
   }
 
   deleteTask(id) {
-    this.tasks = this.tasks.filter(item => item.id !== id);
+    if (this.getTask(id)) {
+      this.tasks = this.tasks.filter(item => item.id !== id);
+      return;
+    }
+    throw Error404('Not found');
+
   }
 
   unsubscribeUser(id) {
-    this.tasks = this.tasks.filter(item => {
+    this.tasks = this.tasks.map(item => {
       if (item.userId === id) {
-        return { item, userId: null };
+        return { ...item, userId: null };
       }
       return item;
     });

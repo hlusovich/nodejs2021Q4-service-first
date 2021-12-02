@@ -8,7 +8,6 @@ const createRequestWithToken = (request, token) => {
       obj[key] = path => method(path).set('Authorization', token);
     }
   }
-
   return obj;
 };
 
